@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Projectile : Ship {
+public class Projectile : MonoBehaviour {
 	
 	public float maxDuration;
 	public float currentDuration;
+	public float acceleration;
 	public int damage;
 	public Ship target;
 	// Use this for initialization
