@@ -62,7 +62,12 @@ public class Ship : MonoBehaviour {
 			if ((this.tag == "Hostile" && projectile.tag == "FriendlyShot")
 			    || (this.tag == "Friendly" && projectile.tag == "HostileTag")) {
 				health -= projectile.damage;
-				if (health <= 0) {
+				if (health <= 0) 
+				{
+					if (this.tag == "Hostile")
+					{
+						EnemyManager.Instance.RemoveEnemy (this);
+					}
 					Destroy (gameObject);
 				}
 				Destroy (collider.gameObject);
