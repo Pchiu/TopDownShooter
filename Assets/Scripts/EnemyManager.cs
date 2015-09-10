@@ -18,11 +18,11 @@ public class EnemyManager : MonoBehaviour {
 	void Start () {
 		enemies = new List<Ship> ();
 		SpawnEnemy (new Vector2 (3, 0), "Target");
+		SpawnEnemy (new Vector2 (-5, 0), "Target");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log (enemies.Count);
 	}
 
 	public void SpawnEnemy(Vector2 position, string name)
@@ -36,8 +36,21 @@ public class EnemyManager : MonoBehaviour {
 		enemies.Remove (enemy);
 	}
 
-	void FindNearestEnemy(Transform source)
+	public Ship FindNearestEnemy(Vector3 source)
 	{
-
+		Ship nearestEnemy = null;
+		float closestDistanceSqr = Mathf.Infinity;
+		foreach(Ship potentialTarget in enemies)
+		{
+			Vector3 directionToTarget = potentialTarget.transform.position - source;
+			float dSqrToTarget = directionToTarget.sqrMagnitude;
+			if(dSqrToTarget < closestDistanceSqr)
+			{
+				closestDistanceSqr = dSqrToTarget;
+				nearestEnemy = potentialTarget;
+			}
+		}
+		
+		return nearestEnemy;
 	}
 }
