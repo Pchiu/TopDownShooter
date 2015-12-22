@@ -9,6 +9,10 @@ public class Ship : MonoBehaviour {
 	public float maxVelocity;
 	public int health;
 	public bool hostile;
+    public float special;
+    public bool specialActive;
+    public float specialRegenRate;
+    public float specialConsumptionRate;
 
 	public List<Weapon> weapons;
 	void Start () {
@@ -17,7 +21,32 @@ public class Ship : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		/*
+        
+        if (specialActive)
+        {
+            if (special <= 0)
+            {
+                specialActive = false;
+                special = 0;
+            }
+            else
+            {
+                special -= specialConsumptionRate * Time.deltaTime;
+            }
+        }
+        else
+        {
+            if (special < 100)
+            {
+                special += specialRegenRate * Time.deltaTime;
+            }
+            else if (special >= 100)
+            {
+                special = 100;
+            }
+        }
+        //Debug.Log("Special: " + special);
+        /*
 		Vector3 move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 		velocity += move * acceleration * Time.deltaTime;
 		transform.position += velocity;
@@ -26,7 +55,7 @@ public class Ship : MonoBehaviour {
 		Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, mousePos - transform.position);
 		transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, 100 * Time.deltaTime);
 		*/
-	}
+    }
 
 	public void FirePrimary()
 	{
@@ -63,13 +92,12 @@ public class Ship : MonoBehaviour {
 		}
 	}
 
-
 	void OnTriggerEnter2D(Collider2D collider)
 	{
 		Projectile projectile = collider.gameObject.GetComponent<Projectile> ();
 		if (projectile != null) {
 			if ((this.tag == "Hostile" && projectile.tag == "FriendlyShot")
-			    || (this.tag == "Friendly" && projectile.tag == "HostileTag")) {
+			    || (this.tag == "Friendly" && projectile.tag == "HostileShot")) {
 				health -= projectile.damage;
                 var renderer = collider.gameObject.GetComponent<Renderer>();
                 hitFlash(renderer);
