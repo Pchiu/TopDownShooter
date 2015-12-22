@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class Ship : MonoBehaviour {
 	
-	public float acceleration = 10.0f;
-	public int rotationSpeed = 180;
-	public float maxVelocity = 5.0f;
-	public int health = 100;
+	public float acceleration;
+	public int rotationSpeed;
+	public float maxVelocity;
+	public int health;
 	public bool hostile;
 
 	public List<Weapon> weapons;
@@ -26,7 +26,6 @@ public class Ship : MonoBehaviour {
 		Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, mousePos - transform.position);
 		transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, 100 * Time.deltaTime);
 		*/
-
 	}
 
 	public void FirePrimary()
@@ -36,11 +35,21 @@ public class Ship : MonoBehaviour {
 		{
 			if (weapon.weaponGroup == "Primary")
 			{
-				Debug.Log ("Firing " + weapon.weaponName);
 				weapon.Fire ();
 			}
 		}
 	}
+
+    public void StopPrimary()
+    {
+        foreach (Weapon weapon in weapons)
+        {
+            if (weapon.weaponGroup == "Primary")
+            {
+                weapon.StopFiring();
+            }
+        }
+    }
 
 	public void FireSecondary()
 	{
@@ -62,6 +71,8 @@ public class Ship : MonoBehaviour {
 			if ((this.tag == "Hostile" && projectile.tag == "FriendlyShot")
 			    || (this.tag == "Friendly" && projectile.tag == "HostileTag")) {
 				health -= projectile.damage;
+                var renderer = collider.gameObject.GetComponent<Renderer>();
+                hitFlash(renderer);
 				if (health <= 0) 
 				{
 					if (this.tag == "Hostile")
@@ -71,8 +82,16 @@ public class Ship : MonoBehaviour {
 					Destroy (gameObject);
 				}
 				Destroy (collider.gameObject);
+
 			}
 		}
 	}
+
+    IEnumerator hitFlash(Renderer renderer)
+    {
+        renderer.material.color = Color.red;
+        yield return new WaitForSeconds(.5f);
+        renderer.material.color = Color.white;
+    }
 
 }
