@@ -1,14 +1,33 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
 	public Ship ship;
     Quaternion upDirection = Quaternion.LookRotation(Vector3.forward, Vector3.up);
+    float xMin;
+    float xMax;
+    float yMin;
+    float yMax;
+    public Slider specialBarSlider;
+
 	// Use this for initialization
 	void Start () {
-
-	}
+        float distance = transform.position.z - Camera.main.transform.position.z;
+        Vector3 left = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance));
+        Vector3 right = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance));
+        xMin = left.x;
+        xMax = right.x;
+        Vector3 top = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, distance));
+        Vector3 bottom = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance));
+        yMin = bottom.y;
+        yMax = top.y;
+        Debug.Log("xMin: " + xMin);
+        Debug.Log("xMax: " + xMax);
+        Debug.Log("yMin: " + yMin);
+        Debug.Log("yMax: " + yMax);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -28,51 +47,17 @@ public class PlayerController : MonoBehaviour {
         {
             ship.specialActive = false;
         }
-        MovePlayerShip();
+        Vector3 move = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0);
+        MoveShip();
+        specialBarSlider.value = ship.special;
     }
 
-	void MovePlayerShip()
-	{
+    void MoveShip()
+    {
         Vector3 move = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0);
         ship.transform.position += move * ship.acceleration * Time.deltaTime;
-        if (ship.specialActive)
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, mousePos - ship.transform.position);
-            ship.transform.rotation = Quaternion.RotateTowards(ship.transform.rotation, targetRotation, ship.rotationSpeed * Time.deltaTime);
-        }
-        else
-        {
-            ship.transform.rotation = Quaternion.RotateTowards(ship.transform.rotation, upDirection, ship.rotationSpeed * Time.deltaTime);
-        }
-        /*
-        if (Input.GetKey(KeyCode.A))
-        {
-            ship.transform.position += Vector3.left * ship.acceleration * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            ship.transform.position += Vector3.right * ship.acceleration * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.W))
-        {
-            ship.transform.position += Vector3.up * ship.acceleration * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            ship.transform.position += Vector3.down * ship.acceleration * Time.deltaTime;
-        }
-        */
-        /*
-		Vector3 move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-		float forward = Input.GetAxis ("Vertical");
-		// Use AddRelativeForce for relative controls
-		ship.GetComponent<Rigidbody2D>().AddForce(new Vector2(move.x * ship.acceleration, move.y * ship.acceleration));
-		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Debug.Log(Input.mousePosition);
-		Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, mousePos - ship.transform.position);
-        //Debug.Log(targetRotation);
-		ship.transform.rotation = Quaternion.RotateTowards (ship.transform.rotation, targetRotation, ship.rotationSpeed * Time.deltaTime);
-        */
+        var clampedX = Mathf.Clamp(ship.transform.position.x, xMin, xMax);
+        var clampedY = Mathf.Clamp(ship.transform.position.y, yMin, yMax);
+        ship.transform.position = new Vector3(clampedX, clampedY, ship.transform.position.z);
     }
 }
