@@ -25,6 +25,6 @@ public class GuidedProjectile : Projectile {
 			transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
 		}
-        transform.position += new Vector3(transform.up.x * acceleration * Time.deltaTime, transform.up.y * acceleration * Time.deltaTime, 0);
+        transform.position += new Vector3(transform.up.x * speed * Time.deltaTime, transform.up.y * speed * Time.deltaTime, 0);
 	}
 }
