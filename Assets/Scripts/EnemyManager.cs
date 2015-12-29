@@ -17,9 +17,11 @@ public class EnemyManager : MonoBehaviour {
 
 	void Start () {
 		enemies = new List<Ship> ();
+        /*
 		SpawnEnemy (new Vector2 (3, 0), "Target");
 		SpawnEnemy (new Vector2 (-5, 0), "Target");
         SpawnEnemy (new Vector2(0, 4), "Enemy");
+        */
 	}
 	
 	// Update is called once per frame
