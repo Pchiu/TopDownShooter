@@ -5,12 +5,19 @@ public class Waypoint{
 
     public Vector3 position;
     public float time;
-    public int movementType;
+    public MovementType movementType;
 
-    public Waypoint(Vector3 position, float time, int movementType)
+    public Waypoint(Vector3 position, float time, MovementType movementType)
     {
         this.position = position;
         this.time = time;
         this.movementType = movementType;
     }
 }
+
+public enum MovementType
+{
+    Absolute,
+    Relative
+}
+

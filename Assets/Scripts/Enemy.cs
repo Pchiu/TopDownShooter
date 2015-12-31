@@ -6,12 +6,13 @@ public class Enemy : Ship {
     public EnemyBehavior behavior;
 	// Use this for initialization
 	void Start () {
+        behavior.transform = transform;
         behavior.Start();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        behavior.Action(transform);
+        behavior.Action();
 	}
 
     void OnTriggerEnter2D(Collider2D collider)
